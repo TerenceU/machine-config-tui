@@ -1,0 +1,5 @@
+# Walker Application Launcher
+# Format: [official] or [aur] section markers
+
+[aur]
+walker-bin

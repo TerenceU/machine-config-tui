@@ -1,0 +1,5 @@
+# Swaync Notification Daemon
+# Format: [official] or [aur] section markers
+
+[official]
+swaync

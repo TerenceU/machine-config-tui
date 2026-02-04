@@ -1,0 +1,5 @@
+# Kitty Terminal Emulator
+# Format: [official] or [aur] section markers
+
+[official]
+kitty

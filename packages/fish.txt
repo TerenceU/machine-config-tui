@@ -1,0 +1,9 @@
+# Fish Shell
+# Format: [official] or [aur] section markers
+
+[official]
+fish
+bat
+exa
+duf
+fzf

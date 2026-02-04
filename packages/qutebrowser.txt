@@ -1,0 +1,6 @@
+# Qutebrowser
+# Format: [official] or [aur] section markers
+
+[official]
+qutebrowser
+python-adblock

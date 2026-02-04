@@ -1,0 +1,7 @@
+# Shell Extras (Bash configs and tools)
+# Format: [official] or [aur] section markers
+
+[official]
+bash
+bash-completion
+starship

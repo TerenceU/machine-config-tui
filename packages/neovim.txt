@@ -1,0 +1,10 @@
+# Neovim Editor
+# Format: [official] or [aur] section markers
+
+[official]
+neovim
+ripgrep
+fd
+nodejs
+npm
+python-pip

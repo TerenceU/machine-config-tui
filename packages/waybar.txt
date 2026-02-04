@@ -1,0 +1,7 @@
+# Waybar Status Bar
+# Format: [official] or [aur] section markers
+
+[official]
+waybar
+otf-font-awesome
+ttf-jetbrains-mono-nerd

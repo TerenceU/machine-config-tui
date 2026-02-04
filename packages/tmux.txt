@@ -1,0 +1,6 @@
+# Tmux Terminal Multiplexer
+# Format: [official] or [aur] section markers
+
+[official]
+tmux
+wl-clipboard

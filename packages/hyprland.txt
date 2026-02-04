@@ -1,0 +1,17 @@
+# Hyprland Wayland Compositor
+# Format: [official] or [aur] section markers
+
+[official]
+hyprland
+xdg-desktop-portal-hyprland
+polkit-kde-agent
+qt5-wayland
+qt6-wayland
+hyprpaper
+hypridle
+hyprlock
+hyprpicker
+hyprshot
+
+[aur]
+# Add AUR packages here if needed

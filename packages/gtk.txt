@@ -1,0 +1,7 @@
+# GTK Theme and Icons
+# Format: [official] or [aur] section markers
+
+[official]
+nwg-look
+gtk3
+gtk4
