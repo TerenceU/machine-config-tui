@@ -1,0 +1,30 @@
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Backups
+backup/
+*.backup
+*.bak
+
+# Local user modifications
+local.sh
+*.local
+
+# Sensitive data
+*.key
+*.pem
+secrets/
+
+# Testing
+test-env/
