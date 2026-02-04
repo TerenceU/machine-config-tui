@@ -1,0 +1,6 @@
+# Zsh Shell
+[official]
+zsh
+zsh-completions
+zsh-syntax-highlighting
+zsh-autosuggestions

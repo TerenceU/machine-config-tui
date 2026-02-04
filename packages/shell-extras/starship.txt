@@ -1,0 +1,3 @@
+# Starship Prompt
+[official]
+starship
