@@ -1,0 +1,31 @@
+
+* {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 14px;
+}
+
+/* sfondo */
+window {
+    background: #282828;
+    border: 2px solid #3c3836;
+}
+
+/* voce non selezionata */
+entry {
+    background: #1d2021;
+    color: #ebdbb2;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+/* voce selezionata */
+entry:selected {
+    background: #458588;
+    color: #fbf1c7;
+}
+
+/* miniature immagini */
+image {
+    border-radius: 8px;
+    border: 1px solid #3c3836;
+}

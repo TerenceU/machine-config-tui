@@ -1,0 +1,55 @@
+# --------------- theme --------------
+theme = "gruvbox"
+# ---------- Providers list ----------
+[providers]
+default = [
+  "desktopapplications",   # launcher app
+  "runner",                # command runner
+  "files",                 # file search
+  "clipboard",             # clipboard history
+  "1password",             # 1Password provider
+  "menus",                 # custom menus
+  "websearch"              # web search
+]
+
+# App launcher
+[providers.desktopapplications]
+enabled = true
+
+# Run commands
+[providers.runner]
+enabled = true
+
+# File search
+[providers.files]
+enabled = true
+paths = ["~"]
+
+# Clipboard history
+[providers.clipboard]
+enabled = true
+show_images = true
+store_images = true
+max_entries = 100
+
+# 1Password integration
+[providers.1password]
+enabled = true
+
+# Custom menus
+[providers.menus]
+enabled = true
+
+# Web search
+[providers.websearch]
+enabled = true
+search_url = "https://www.google.com/search?q={query}"
+
+# UI settings
+[ui]
+fullscreen = false
+width = 640
+height = 450
+border_radius = 10
+placeholder = "Search…"
+show_empty = true
