@@ -28,8 +28,8 @@ Sistema di gestione dotfiles per Arch Linux con interfaccia TUI interattiva.
 
 ```bash
 # Clone repository
-git clone https://github.com/TUOUSERNAME/machine-config-tui.git
-cd machine-config-tui
+git clone https://github.com/[YOUR-USERNAME]/machine-config-tui.git ~/repos/machine-config-tui
+cd ~/repos/machine-config-tui
 
 # Avvia installer
 ./install.sh
