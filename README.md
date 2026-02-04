@@ -12,17 +12,31 @@ Sistema di gestione dotfiles per Arch Linux con interfaccia TUI interattiva.
 
 ## 📦 Componenti Supportati
 
+### Desktop Environment
 - **Hyprland** - Wayland compositor + moduli + scripts
 - **Waybar** - Status bar (config + style)
+- **Swaync** - Notification daemon
+- **Walker** - Application launcher
+- **GTK Theme** - Tema + icons + nwg-look config
+
+### Terminal & Shells
 - **Fish** - Shell + config + functions
 - **Tmux** - Terminal multiplexer + theme
 - **Kitty** - Terminal emulator
+- **Shell Extras** 📂 - Submenu:
+  - bash (full config)
+  - bash-aliases
+  - starship (prompt)
+  - zsh
+
+### Editors & Browsers
 - **Neovim** - Editor (LazyVim config)
 - **Qutebrowser** - Browser vim-style
-- **GTK Theme** - Tema + icons + nwg-look config
-- **Swaync** - Notification daemon
-- **Walker** - Application launcher
-- **Shell extras** - Bash config (.bashrc, .bash_aliases, .bash_env)
+
+### Hacking & Security
+- **Hack Tools** 📂 - Submenu:
+  - **Pentest Tools** 📂 (nmap, metasploit, burpsuite, john, hashcat, wireshark, sqlmap)
+  - **Wordlists** 📂 (rockyou, seclists, dirb)
 
 ## 🚀 Installazione Rapida
 
