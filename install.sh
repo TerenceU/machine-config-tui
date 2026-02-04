@@ -53,17 +53,24 @@ execute_component_script() {
         return 1
     fi
     
-    log_header "Installing: $component"
-    
-    # Make script executable and run it
-    chmod +x "$script"
-    bash "$script" || {
-        log_error "Failed to install $component"
-        return 1
-    }
-    
-    log_success "✓ $component installed successfully"
-    return 0
+    # Check if component has a submenu directory
+    if [[ -d "${COMPONENTS_DIR}/${component}" ]]; then
+        # This is a submenu component, run it directly (it will handle its own UI)
+        log_header "Opening: $component"
+        chmod +x "$script"
+        bash "$script"
+        return $?
+    else
+        # Regular component, install it
+        log_header "Installing: $component"
+        chmod +x "$script"
+        bash "$script" || {
+            log_error "Failed to install $component"
+            return 1
+        }
+        log_success "✓ $component installed successfully"
+        return 0
+    fi
 }
 
 # Install selected components
@@ -75,28 +82,49 @@ install_components() {
         return 0
     fi
     
-    log_header "Installation Started"
-    log_info "Components to install: ${components[*]}"
-    
-    local failed_components=()
-    local success_count=0
+    # Separate submenu components from regular components
+    local regular_components=()
+    local submenu_components=()
     
     for component in "${components[@]}"; do
-        if execute_component_script "$component"; then
-            ((success_count++))
+        if [[ -d "${COMPONENTS_DIR}/${component}" ]]; then
+            submenu_components+=("$component")
         else
-            failed_components+=("$component")
+            regular_components+=("$component")
         fi
+    done
+    
+    # Handle submenu components (open them one by one)
+    for component in "${submenu_components[@]}"; do
+        execute_component_script "$component"
         echo ""
     done
     
-    # Summary
-    log_header "Installation Summary"
-    log_success "$success_count component(s) installed successfully"
-    
-    if [[ ${#failed_components[@]} -gt 0 ]]; then
-        log_error "Failed components: ${failed_components[*]}"
-        return 1
+    # Handle regular components (batch install)
+    if [[ ${#regular_components[@]} -gt 0 ]]; then
+        log_header "Installation Started"
+        log_info "Components to install: ${regular_components[*]}"
+        
+        local failed_components=()
+        local success_count=0
+        
+        for component in "${regular_components[@]}"; do
+            if execute_component_script "$component"; then
+                ((success_count++))
+            else
+                failed_components+=("$component")
+            fi
+            echo ""
+        done
+        
+        # Summary
+        log_header "Installation Summary"
+        log_success "$success_count component(s) installed successfully"
+        
+        if [[ ${#failed_components[@]} -gt 0 ]]; then
+            log_error "Failed components: ${failed_components[*]}"
+            return 1
+        fi
     fi
     
     return 0
@@ -151,11 +179,22 @@ show_component_menu() {
         exit 1
     fi
     
+    # Add visual indicators for submenu components
+    local display_components=()
+    for component in "${available_components[@]}"; do
+        if [[ -d "${COMPONENTS_DIR}/${component}" ]]; then
+            display_components+=("${component} 📂")
+        else
+            display_components+=("${component}")
+        fi
+    done
+    
     log_header "Machine Config TUI"
     
     case "$mode" in
         install)
             log_info "Select components to INSTALL (Space to select, Enter to confirm):"
+            log_info "📂 = Submenu (will open selection menu)"
             ;;
         uninstall)
             log_info "Select components to UNINSTALL (Space to select, Enter to confirm):"
@@ -168,16 +207,18 @@ show_component_menu() {
     echo ""
     
     # Use gum for multi-select
-    local selected_components=$(gum choose --no-limit --height 15 "${available_components[@]}")
+    local selected_components=$(gum choose --no-limit --height 15 "${display_components[@]}")
     
     if [[ -z "$selected_components" ]]; then
         log_info "No components selected. Exiting."
         exit 0
     fi
     
-    # Convert to array
+    # Convert to array and remove emoji indicators
     local selected_array=()
     while IFS= read -r line; do
+        # Remove the emoji indicator if present
+        line="${line% 📂}"
         selected_array+=("$line")
     done <<< "$selected_components"
     
@@ -186,7 +227,7 @@ show_component_menu() {
     # Confirm action
     case "$mode" in
         install)
-            gum confirm "Install ${#selected_array[@]} component(s)?" || {
+            gum confirm "Proceed with ${#selected_array[@]} component(s)?" || {
                 log_info "Installation cancelled"
                 exit 0
             }
