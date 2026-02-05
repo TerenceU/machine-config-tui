@@ -36,60 +36,46 @@ execute_wordlist() {
 }
 
 main() {
-    log_header "Wordlists"
-    
-    local available_lists=($(get_wordlists))
-    
-    if [[ ${#available_lists[@]} -eq 0 ]]; then
-        log_error "No wordlists found"
-        return 1
-    fi
-    
     if ! command_exists gum; then
         log_error "gum is required for submenu"
         return 1
     fi
     
-    log_info "Select wordlists to install (Space to select, Enter to confirm):"
-    echo ""
-    
-    local selected=$(gum choose --no-limit --height 15 "${available_lists[@]}")
-    
-    if [[ -z "$selected" ]]; then
-        log_info "No wordlists selected"
-        return 0
-    fi
-    
-    # Convert to array
-    local selected_array=()
-    while IFS= read -r line; do
-        selected_array+=("$line")
-    done <<< "$selected"
-    
-    echo ""
-    gum confirm "Install ${#selected_array[@]} wordlist(s)?" || {
-        log_info "Installation cancelled"
-        return 0
-    }
-    
-    # Install selected wordlists
-    local failed=()
-    for list in "${selected_array[@]}"; do
-        if execute_wordlist "$list"; then
-            log_success "✓ $list installed"
-        else
-            failed+=("$list")
+    while true; do
+        log_header "Wordlists"
+        
+        local available_lists=($(get_wordlists))
+        
+        if [[ ${#available_lists[@]} -eq 0 ]]; then
+            log_error "No wordlists found"
+            return 1
         fi
+        
+        # Build menu with back option
+        local menu_items=("← Back")
+        menu_items+=("──────────────")
+        menu_items+=("${available_lists[@]}")
+        
+        log_info "Navigate with ↑↓ arrows, Enter to install"
         echo ""
+        
+        local selected=$(gum choose --height 15 "${menu_items[@]}")
+        
+        if [[ -z "$selected" || "$selected" == "← Back" || "$selected" == "──────────────" ]]; then
+            return 0
+        fi
+        
+        echo ""
+        
+        if gum confirm "Install $selected?"; then
+            if execute_wordlist "$selected"; then
+                log_success "✓ $selected installed successfully"
+            fi
+            echo ""
+            gum style --foreground 212 "Press Enter to continue..."
+            read -r
+        fi
     done
-    
-    if [[ ${#failed[@]} -gt 0 ]]; then
-        log_error "Failed wordlists: ${failed[*]}"
-        return 1
-    fi
-    
-    log_success "All wordlists installed!"
-    return 0
 }
 
 main "$@"

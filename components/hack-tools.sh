@@ -11,24 +11,30 @@ show_hack_tools_menu() {
         return 1
     fi
     
-    log_header "Hack Tools Menu"
-    
-    local choice=$(gum choose \
-        "Pentest Tools" \
-        "Wordlists" \
-        "Back to main menu")
-    
-    case "$choice" in
-        "Pentest Tools")
-            bash "${SCRIPT_DIR}/components/hack-tools/pentest-tools.sh"
-            ;;
-        "Wordlists")
-            bash "${SCRIPT_DIR}/components/hack-tools/wordlists.sh"
-            ;;
-        "Back to main menu")
-            return 0
-            ;;
-    esac
+    while true; do
+        log_header "Hack Tools"
+        
+        log_info "Navigate with ↑↓ arrows, Enter to select"
+        echo ""
+        
+        local choice=$(gum choose --height 10 \
+            "← Back" \
+            "──────────────" \
+            "Pentest Tools" \
+            "Wordlists")
+        
+        case "$choice" in
+            "← Back"|""|"──────────────")
+                return 0
+                ;;
+            "Pentest Tools")
+                bash "${SCRIPT_DIR}/components/hack-tools/pentest-tools.sh"
+                ;;
+            "Wordlists")
+                bash "${SCRIPT_DIR}/components/hack-tools/wordlists.sh"
+                ;;
+        esac
+    done
 }
 
 main() {

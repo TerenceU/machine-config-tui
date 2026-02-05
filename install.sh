@@ -172,82 +172,101 @@ update_components() {
 show_component_menu() {
     local mode="$1"  # install, uninstall, update
     
-    local available_components=($(get_available_components))
-    
-    if [[ ${#available_components[@]} -eq 0 ]]; then
-        log_error "No components found in $COMPONENTS_DIR"
-        exit 1
-    fi
-    
-    # Add visual indicators for submenu components
-    local display_components=()
-    for component in "${available_components[@]}"; do
-        if [[ -d "${COMPONENTS_DIR}/${component}" ]]; then
-            display_components+=("${component} 📂")
-        else
-            display_components+=("${component}")
+    while true; do
+        local available_components=($(get_available_components))
+        
+        if [[ ${#available_components[@]} -eq 0 ]]; then
+            log_error "No components found in $COMPONENTS_DIR"
+            exit 1
         fi
+        
+        # Add visual indicators for submenu components
+        local display_components=()
+        for component in "${available_components[@]}"; do
+            if [[ -d "${COMPONENTS_DIR}/${component}" ]]; then
+                display_components+=("📂 ${component}")
+            else
+                display_components+=("   ${component}")
+            fi
+        done
+        
+        # Add exit option
+        display_components+=("   ──────────────")
+        display_components+=("   Exit")
+        
+        log_header "Machine Config TUI"
+        
+        case "$mode" in
+            install)
+                log_info "Navigate with ↑↓ arrows, Enter to select"
+                log_info "📂 = Submenu (press Enter to explore)"
+                ;;
+            uninstall)
+                log_info "Select component to UNINSTALL"
+                ;;
+            update)
+                log_info "Select component to UPDATE"
+                ;;
+        esac
+        
+        echo ""
+        
+        # Use gum for single-select
+        local selected=$(gum choose --height 20 "${display_components[@]}")
+        
+        if [[ -z "$selected" ]]; then
+            log_info "Exiting..."
+            exit 0
+        fi
+        
+        # Remove prefix and trim
+        selected="${selected#📂 }"
+        selected="${selected#   }"
+        
+        # Check for exit
+        if [[ "$selected" == "Exit" || "$selected" == "──────────────" ]]; then
+            log_info "Goodbye!"
+            exit 0
+        fi
+        
+        echo ""
+        
+        # Check if it's a submenu
+        if [[ -d "${COMPONENTS_DIR}/${selected}" ]]; then
+            # Open submenu
+            execute_component_script "$selected"
+        else
+            # Install single component
+            case "$mode" in
+                install)
+                    if gum confirm "Install $selected?"; then
+                        execute_component_script "$selected"
+                        echo ""
+                        gum style --foreground 212 "Press Enter to continue..."
+                        read -r
+                    fi
+                    ;;
+                uninstall)
+                    if gum confirm "Uninstall $selected?"; then
+                        unstow_component "$selected"
+                        echo ""
+                        gum style --foreground 212 "Press Enter to continue..."
+                        read -r
+                    fi
+                    ;;
+                update)
+                    if gum confirm "Update $selected?"; then
+                        restow_component "$selected"
+                        echo ""
+                        gum style --foreground 212 "Press Enter to continue..."
+                        read -r
+                    fi
+                    ;;
+            esac
+        fi
+        
+        # Loop back to menu
     done
-    
-    log_header "Machine Config TUI"
-    
-    case "$mode" in
-        install)
-            log_info "Select components to INSTALL (Space to select, Enter to confirm):"
-            log_info "📂 = Submenu (will open selection menu)"
-            ;;
-        uninstall)
-            log_info "Select components to UNINSTALL (Space to select, Enter to confirm):"
-            ;;
-        update)
-            log_info "Select components to UPDATE (Space to select, Enter to confirm):"
-            ;;
-    esac
-    
-    echo ""
-    
-    # Use gum for multi-select
-    local selected_components=$(gum choose --no-limit --height 15 "${display_components[@]}")
-    
-    if [[ -z "$selected_components" ]]; then
-        log_info "No components selected. Exiting."
-        exit 0
-    fi
-    
-    # Convert to array and remove emoji indicators
-    local selected_array=()
-    while IFS= read -r line; do
-        # Remove the emoji indicator if present
-        line="${line% 📂}"
-        selected_array+=("$line")
-    done <<< "$selected_components"
-    
-    echo ""
-    
-    # Confirm action
-    case "$mode" in
-        install)
-            gum confirm "Proceed with ${#selected_array[@]} component(s)?" || {
-                log_info "Installation cancelled"
-                exit 0
-            }
-            install_components "${selected_array[@]}"
-            ;;
-        uninstall)
-            gum confirm "Uninstall ${#selected_array[@]} component(s)?" || {
-                log_info "Uninstallation cancelled"
-                exit 0
-            }
-            uninstall_components "${selected_array[@]}"
-            ;;
-        update)
-            gum confirm "Update ${#selected_array[@]} component(s)?" || {
-                log_info "Update cancelled"
-                exit 0
-            }
-            update_components "${selected_array[@]}"
-            ;;
-    esac
 }
 
 # Show main menu
