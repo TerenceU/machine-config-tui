@@ -1,0 +1,46 @@
+# accounts.conf.example - Template for aerc email accounts
+# Copy to ~/.config/aerc/accounts.conf and customize
+
+# ============================================================
+# Gmail with OAuth2
+# ============================================================
+[Personal Gmail]
+source = imaps://your-email@gmail.com@imap.gmail.com:993
+outgoing = smtp+plain://your-email@gmail.com@smtp.gmail.com:587
+from = Your Name <your-email@gmail.com>
+copy-to = [Gmail]/Sent Mail
+archive = [Gmail]/All Mail
+postpone = [Gmail]/Drafts
+default = Inbox
+
+# OAuth2 authentication
+source-cred-cmd = python ~/.config/aerc/mutt_oauth2.py ~/.config/aerc/gmail.tokens
+outgoing-cred-cmd = python ~/.config/aerc/mutt_oauth2.py ~/.config/aerc/gmail.tokens
+
+# ============================================================
+# Outlook/Microsoft with OAuth2
+# ============================================================
+# [Work Outlook]
+# source = imaps://your-email@outlook.com@outlook.office365.com:993
+# outgoing = smtp+plain://your-email@outlook.com@smtp.office365.com:587
+# from = Your Name <your-email@outlook.com>
+# copy-to = Sent
+# postpone = Drafts
+# default = Inbox
+# 
+# source-cred-cmd = python ~/.config/aerc/mutt_oauth2.py ~/.config/aerc/outlook.tokens
+# outgoing-cred-cmd = python ~/.config/aerc/mutt_oauth2.py ~/.config/aerc/outlook.tokens
+
+# ============================================================
+# Generic IMAP with plain password (not recommended)
+# ============================================================
+# [Personal Email]
+# source = imaps://username@imap.example.com:993
+# outgoing = smtp://username@smtp.example.com:587
+# from = Your Name <username@example.com>
+# copy-to = Sent
+# postpone = Drafts
+# default = Inbox
+# 
+# source-cred-cmd = pass show email/username@example.com
+# outgoing-cred-cmd = pass show email/username@example.com

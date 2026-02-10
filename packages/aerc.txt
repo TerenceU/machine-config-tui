@@ -1,0 +1,6 @@
+aerc
+dante
+ov
+catimg
+w3m
+python
