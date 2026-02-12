@@ -1,3 +1,0 @@
-return {
-  "melkyr/learn-vim",
-}
