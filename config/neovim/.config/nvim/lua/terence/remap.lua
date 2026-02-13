@@ -1,2 +1,2 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
+-- Rimosso <leader><leader> per usarlo con nvim-tree

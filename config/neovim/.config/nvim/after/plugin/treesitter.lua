@@ -1,0 +1,2 @@
+-- Treesitter si attiva automaticamente quando i parser sono installati
+-- Installa i parser con: :TSInstall lua rust javascript zig
