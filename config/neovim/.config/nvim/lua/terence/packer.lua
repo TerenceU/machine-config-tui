@@ -56,4 +56,35 @@ return require('packer').startup(function(use)
 	use {
 		'ray-x/lsp_signature.nvim'
 	}
+	
+	-- UI moderna per command line, messages e popups
+	use {
+		'folke/noice.nvim',
+		requires = {
+			'MunifTanjim/nui.nvim',
+			'rcarriga/nvim-notify',
+		}
+	}
+	
+	-- Help menu per keybindings
+	use {
+		'folke/which-key.nvim'
+	}
+	
+	-- Statusline per vedere mode e info
+	use {
+		'nvim-lualine/lualine.nvim',
+		requires = { 'nvim-tree/nvim-web-devicons' }
+	}
+	
+	-- GitHub Copilot
+	use {
+		'zbirenbaum/copilot.lua',
+		cmd = "Copilot",
+		event = "InsertEnter",
+	}
+	use {
+		'zbirenbaum/copilot-cmp',
+		after = { "copilot.lua" },
+	}
 end)
