@@ -84,7 +84,7 @@ vim.keymap.set('n', '<leader>gc', function()
 	end
 end, { desc = "Git commit all" })
 
-vim.keymap.set('n', '<leader>gP', ':!git push<CR>', { desc = "Git push" })
+vim.keymap.set('n', '<leader>gPp', ':!git push<CR>', { desc = "Git push" })
 vim.keymap.set('n', '<leader>gPt', ':!git push --tags<CR>', { desc = "Git push tags" })
 vim.keymap.set('n', '<leader>gp', ':!git pull<CR>', { desc = "Git pull" })
 vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = "Open LazyGit" })
