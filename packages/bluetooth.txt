@@ -1,11 +1,7 @@
-# Fish Shell
+# Bluetooth support
 # Format: [official] or [aur] section markers
 
 [official]
-fish
-bat
-eza
-duf
-fzf
-dust
-lazygit
+bluez
+bluez-utils
+blueman

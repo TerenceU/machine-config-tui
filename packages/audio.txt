@@ -1,0 +1,8 @@
+# Audio stack (PipeWire)
+# Format: [official] or [aur] section markers
+
+[official]
+pipewire
+pipewire-pulse
+wireplumber
+pavucontrol

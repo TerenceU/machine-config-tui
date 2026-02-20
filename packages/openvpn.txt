@@ -1,11 +1,5 @@
-# Fish Shell
+# OpenVPN client
 # Format: [official] or [aur] section markers
 
 [official]
-fish
-bat
-eza
-duf
-fzf
-dust
-lazygit
+openvpn
