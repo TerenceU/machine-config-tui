@@ -4,7 +4,7 @@
 vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
-	
+
 	use 'wbthomason/packer.nvim'
 	use {
 		'nvim-telescope/telescope.nvim', tag = '0.1.8',
@@ -17,7 +17,7 @@ return require('packer').startup(function(use)
 	use "nvim-lua/plenary.nvim"
 	use { "ellisonleao/gruvbox.nvim" }
 	use ('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
-	
+
 	-- File Explorer
 	use {
 		'nvim-tree/nvim-tree.lua',
@@ -25,21 +25,21 @@ return require('packer').startup(function(use)
 			'nvim-tree/nvim-web-devicons', -- icone per i file
 		},
 	}
-	
+
 	-- Markdown Preview
 	use {
 		'iamcco/markdown-preview.nvim',
 		run = 'cd app && npm install',
 		ft = { 'markdown' },  -- Carica solo per file .md
 	}
-	
+
 	-- LSP
 	use {
 		'williamboman/mason.nvim',
 		'williamboman/mason-lspconfig.nvim',
 		'neovim/nvim-lspconfig',
 	}
-	
+
 	-- Autocompletion
 	use {
 		'hrsh7th/nvim-cmp',
@@ -51,12 +51,12 @@ return require('packer').startup(function(use)
 			'saadparwaiz1/cmp_luasnip',
 		}
 	}
-	
+
 	-- Signature help automatico
 	use {
 		'ray-x/lsp_signature.nvim'
 	}
-	
+
 	-- UI moderna per command line, messages e popups
 	use {
 		'folke/noice.nvim',
@@ -65,18 +65,18 @@ return require('packer').startup(function(use)
 			'rcarriga/nvim-notify',
 		}
 	}
-	
+
 	-- Help menu per keybindings
 	use {
 		'folke/which-key.nvim'
 	}
-	
+
 	-- Statusline per vedere mode e info
 	use {
 		'nvim-lualine/lualine.nvim',
 		requires = { 'nvim-tree/nvim-web-devicons' }
 	}
-	
+
 	-- GitHub Copilot
 	use {
 		'zbirenbaum/copilot.lua',
@@ -87,4 +87,15 @@ return require('packer').startup(function(use)
 		'zbirenbaum/copilot-cmp',
 		after = { "copilot.lua" },
 	}
+
+	-- Git integration
+	use {
+		'lewis6991/gitsigns.nvim'
+	}
+	use {
+		'kdheepak/lazygit.nvim'  -- TUI completa per git
+	}
+	
+	-- Sticky context (come VS Code)
+	use { 'nvim-treesitter/nvim-treesitter-context' }
 end)

@@ -30,3 +30,8 @@ vim.keymap.set("n", "gl", function()
 		vim.cmd(line)
 	end
 end, { desc = "Go to line number" })
+
+-- Quick escape from insert mode
+vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit insert mode" })
+vim.keymap.set("i", "jj", "<Esc>", { desc = "Exit insert mode" })
+

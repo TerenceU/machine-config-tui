@@ -117,6 +117,11 @@ _G.packer_plugins = {
     path = "/home/terence/.local/share/nvim/site/pack/packer/opt/copilot.lua",
     url = "https://github.com/zbirenbaum/copilot.lua"
   },
+  ["gitsigns.nvim"] = {
+    loaded = true,
+    path = "/home/terence/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
+    url = "https://github.com/lewis6991/gitsigns.nvim"
+  },
   ["gruvbox.nvim"] = {
     loaded = true,
     path = "/home/terence/.local/share/nvim/site/pack/packer/start/gruvbox.nvim",

@@ -73,6 +73,30 @@ wk.add({
 	{ "<leader>cp", desc = "Paste from System Clipboard" },
 	{ "<leader>cP", desc = "Paste Before from System Clipboard" },
 	
+	-- Git
+	{ "<leader>g", group = "Git" },
+	{ "<leader>gs", desc = "Stage Hunk" },
+	{ "<leader>gr", desc = "Reset Hunk" },
+	{ "<leader>gS", desc = "Stage Buffer" },
+	{ "<leader>gu", desc = "Undo Stage Hunk" },
+	{ "<leader>gR", desc = "Reset Buffer" },
+	{ "<leader>gp", desc = "Git Pull" },
+	{ "<leader>gP", desc = "Git Push" },
+	{ "<leader>gPt", desc = "Git Push Tags" },
+	{ "<leader>gc", desc = "Git Commit All" },
+	{ "<leader>gt", desc = "Git Create Tag" },
+	{ "<leader>gg", desc = "Open LazyGit" },
+	{ "<leader>gb", desc = "Blame Line" },
+	{ "<leader>gd", desc = "Diff This" },
+	{ "<leader>gD", desc = "Diff This ~" },
+	{ "<leader>gt", group = "Toggle" },
+	{ "<leader>gtb", desc = "Toggle Line Blame" },
+	{ "<leader>gtd", desc = "Toggle Deleted" },
+	
+	-- Treesitter context
+	{ "<leader>t", group = "Toggle" },
+	{ "<leader>tc", desc = "Toggle Sticky Context" },
+	
 	-- Window splits
 	{ "<leader>|", desc = "Split Vertically" },
 	{ "<leader>-", desc = "Split Horizontally" },
@@ -81,5 +105,7 @@ wk.add({
 	{ "gd", desc = "Go to Definition" },
 	{ "[d", desc = "Previous Diagnostic" },
 	{ "]d", desc = "Next Diagnostic" },
+	{ "[c", desc = "Previous Git Hunk" },
+	{ "]c", desc = "Next Git Hunk" },
 })
 
