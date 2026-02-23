@@ -1,0 +1,5 @@
+# Keyboard remapping (keyd)
+# Format: [official] or [aur] section markers
+
+[official]
+keyd
