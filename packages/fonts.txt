@@ -1,0 +1,9 @@
+# System Fonts
+# Format: [official] or [aur] section markers
+
+[official]
+ttf-hack-nerd
+noto-fonts
+noto-fonts-emoji
+ttf-dejavu
+ttf-jetbrains-mono-nerd

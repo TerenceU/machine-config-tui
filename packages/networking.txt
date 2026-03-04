@@ -1,0 +1,7 @@
+# Networking
+# Format: [official] or [aur] section markers
+
+[official]
+networkmanager
+network-manager-applet
+ufw

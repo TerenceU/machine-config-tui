@@ -1,0 +1,5 @@
+# Display Manager (ly)
+# Format: [official] or [aur] section markers
+
+[official]
+ly

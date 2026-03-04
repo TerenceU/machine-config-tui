@@ -9,3 +9,5 @@ duf
 fzf
 dust
 lazygit
+tldr
+rlwrap

@@ -1,0 +1,12 @@
+# Utilities & Applications
+# Format: [official] or [aur] section markers
+
+[official]
+vlc
+vlc-plugins-all
+ranger
+copyq
+mupdf
+bashtop
+rofi
+wofi

@@ -13,6 +13,11 @@ hyprlock
 hyprpicker
 hyprshot
 jq
+swaybg
+swayimg
+nwg-bar
 
 [aur]
-# Add AUR packages here if needed
+hyprlauncher
+waypaper
+wlogout

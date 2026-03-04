@@ -1,0 +1,10 @@
+# Development Tools
+# Format: [official] or [aur] section markers
+
+[official]
+git
+postgresql
+
+[aur]
+code
+pnpm
