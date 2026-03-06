@@ -4,6 +4,7 @@
 [official]
 git
 postgresql
+docker
 
 [aur]
 code

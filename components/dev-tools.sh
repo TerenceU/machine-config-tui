@@ -17,9 +17,14 @@ main() {
             return 1
         }
     else
-        install_official_packages git postgresql
+        install_official_packages git postgresql docker
         install_aur_packages code pnpm
     fi
+
+    log_info "Enabling Docker service..."
+    sudo systemctl enable --now docker
+    sudo usermod -aG docker "$USER"
+    log_info "Docker group added — re-login required to use docker without sudo"
 
     log_success "Dev tools installation complete!"
     return 0
