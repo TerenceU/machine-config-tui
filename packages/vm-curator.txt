@@ -1,0 +1,9 @@
+# VM Curator - QEMU/KVM VM manager
+# Format: [official] or [aur] section markers
+
+[official]
+qemu-desktop
+qemu-hw-uefi-vars
+
+[aur]
+vm-curator
