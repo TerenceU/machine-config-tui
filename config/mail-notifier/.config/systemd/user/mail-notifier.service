@@ -1,0 +1,15 @@
+[Unit]
+Description=IMAP IDLE mail notification service
+After=network-online.target graphical-session.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/terence/.local/bin/mail-notifier.py
+Restart=on-failure
+RestartSec=30
+Environment=DISPLAY=:0
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+
+[Install]
+WantedBy=default.target
