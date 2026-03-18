@@ -13,6 +13,7 @@ import sys
 import socket
 import configparser
 import re
+import time
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 from threading import Thread, Event
@@ -25,7 +26,7 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 AERC_ACCOUNTS_CONF = Path.home() / ".config/aerc/accounts.conf"
-IDLE_TIMEOUT = 25 * 60   # 25 min (server drops IDLE at ~30 min)
+IDLE_TIMEOUT = 60        # Re-check every minute even if IDLE push is missed
 RECONNECT_DELAY = 30     # seconds before reconnect on error
 
 
@@ -115,16 +116,74 @@ def send_notification(account_name: str, folder: str, subject: str, sender: str)
     try:
         subprocess.run(
             ["notify-send", "--urgency=normal", "--icon=mail-unread", title, body],
-            timeout=5
+            timeout=5,
+            check=True,
         )
         log.info(f"Notification sent: {title} | {body}")
     except Exception as e:
         log.warning(f"notify-send failed: {e}")
 
 
+def search_unseen(imap: imaplib.IMAP4_SSL, folder: str) -> set[bytes]:
+    """Return stable IMAP UIDs for unseen messages in the selected folder."""
+    status, _ = imap.select(folder, readonly=True)
+    if status != "OK":
+        raise RuntimeError(f"select {folder} failed: {status}")
+
+    status, data = imap.uid("search", None, "UNSEEN")
+    if status != "OK":
+        raise RuntimeError(f"UID SEARCH UNSEEN failed: {status}")
+
+    return set(data[0].split()) if data and data[0] else set()
+
+
+def fetch_headers(imap: imaplib.IMAP4_SSL, uid: bytes) -> tuple[str, str]:
+    """Fetch subject and sender for a message UID."""
+    status, msg_data = imap.uid("fetch", uid, "(BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
+    if status != "OK" or not msg_data or not msg_data[0]:
+        raise RuntimeError(f"UID FETCH failed for {uid!r}")
+
+    raw = msg_data[0][1].decode("utf-8", errors="replace")
+    subject, sender = "", ""
+    for line in raw.splitlines():
+        if line.lower().startswith("subject:"):
+            subject = line[8:].strip()
+        elif line.lower().startswith("from:"):
+            sender = line[5:].strip()
+    return subject or "(no subject)", sender or "unknown"
+
+
+def idle_once(imap: imaplib.IMAP4_SSL, account_name: str) -> None:
+    """Wait for one IDLE cycle and drain the server response cleanly."""
+    tag = f"IDLE{int(time.monotonic() * 1000)}".encode()
+    imap.send(tag + b" IDLE\r\n")
+
+    ack = imap.readline()
+    if not ack.startswith(b"+"):
+        raise RuntimeError(f"IDLE start failed: {ack!r}")
+
+    imap.socket().settimeout(IDLE_TIMEOUT)
+    try:
+        line = imap.readline()
+        log.debug(f"[{account_name}] IDLE server event: {line!r}")
+    except socket.timeout:
+        log.debug(f"[{account_name}] IDLE timeout, polling unseen state")
+    finally:
+        imap.socket().settimeout(None)
+
+    imap.send(b"DONE\r\n")
+    while True:
+        line = imap.readline()
+        if not line:
+            raise RuntimeError("EOF while leaving IDLE")
+        if line.startswith(tag):
+            break
+
+
 def watch_account(account: dict, stop_event: Event):
     name = account["name"]
     folder = account["folder"]
+    known_unseen: set[bytes] | None = None
 
     while not stop_event.is_set():
         imap = None
@@ -133,48 +192,34 @@ def watch_account(account: dict, stop_event: Event):
             imap = connect_imap(account)
             log.info(f"[{name}] Authenticated OK")
 
-            # Record existing unseen — don't notify for mail already there
-            imap.select(folder, readonly=True)
-            _, data = imap.search(None, "UNSEEN")
-            known_unseen = set(data[0].split()) if data[0] else set()
-            log.info(f"[{name}] Watching {folder} ({len(known_unseen)} existing unseen)")
+            current_unseen = search_unseen(imap, folder)
+            if known_unseen is None:
+                known_unseen = current_unseen
+                log.info(f"[{name}] Watching {folder} ({len(known_unseen)} existing unseen)")
+            else:
+                missed_uids = current_unseen - known_unseen
+                if missed_uids:
+                    log.info(f"[{name}] Found {len(missed_uids)} unseen message(s) after reconnect")
+                    for uid in sorted(missed_uids)[-5:]:
+                        try:
+                            subject, sender = fetch_headers(imap, uid)
+                            send_notification(name, folder, subject, sender)
+                        except Exception as e:
+                            log.warning(f"[{name}] Error fetching missed message: {e}")
+                            send_notification(name, folder, "New message", "")
+                known_unseen = current_unseen
 
             while not stop_event.is_set():
-                # Send IDLE
-                imap.send(b"IDLE_TAG IDLE\r\n")
-                imap.readline()  # "+ idling"
-
-                imap.socket().settimeout(IDLE_TIMEOUT)
-                try:
-                    imap.readline()  # wait for server push
-                except socket.timeout:
-                    log.debug(f"[{name}] IDLE timeout, refreshing...")
-
-                imap.send(b"DONE\r\n")
-                imap.readline()
-
-                # Re-authenticate to refresh token
-                imap.logout()
-                imap = connect_imap(account)
-
-                imap.select(folder, readonly=True)
-                _, data = imap.search(None, "UNSEEN")
-                current_unseen = set(data[0].split()) if data[0] else set()
+                idle_once(imap, name)
+                current_unseen = search_unseen(imap, folder)
                 new_uids = current_unseen - known_unseen
 
                 if new_uids:
                     log.info(f"[{name}] {len(new_uids)} new message(s)!")
-                    for uid in list(new_uids)[-5:]:
+                    for uid in sorted(new_uids)[-5:]:
                         try:
-                            _, msg_data = imap.fetch(uid, "(BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
-                            raw = msg_data[0][1].decode("utf-8", errors="replace") if msg_data[0] else ""
-                            subject, sender = "", ""
-                            for line in raw.splitlines():
-                                if line.lower().startswith("subject:"):
-                                    subject = line[8:].strip()
-                                elif line.lower().startswith("from:"):
-                                    sender = line[5:].strip()
-                            send_notification(name, folder, subject or "(no subject)", sender or "unknown")
+                            subject, sender = fetch_headers(imap, uid)
+                            send_notification(name, folder, subject, sender)
                         except Exception as e:
                             log.warning(f"[{name}] Error fetching message: {e}")
                             send_notification(name, folder, "New message", "")
