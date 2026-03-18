@@ -20,6 +20,7 @@ backup/
 # Local user modifications
 local.sh
 *.local
+!config/mail-notifier/.local/
 
 # Sensitive data
 *.key
