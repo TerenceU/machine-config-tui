@@ -161,6 +161,10 @@ window#waybar.hidden {
   min-width: 80px;
 }
 
+#custom-keyboard-layout {
+  min-width: 62px;
+}
+
 #custom-notification {
   min-width: 30px;
 }

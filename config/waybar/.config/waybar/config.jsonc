@@ -18,6 +18,7 @@
   "modules-right": [
     "cpu",
     "memory",
+    "custom/keyboard-layout",
     "pulseaudio",
     "custom/notification"
   ],
@@ -38,6 +39,13 @@
     "disable-scroll": true,
     "all-outputs": true,
     "format": "{name}"
+  },
+
+  "custom/keyboard-layout": {
+    "exec": "~/.config/waybar/scripts/keyboard-layout.sh",
+    "interval": 1,
+    "format": "{}",
+    "tooltip": false
   },
 
   "custom/notification": {
