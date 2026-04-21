@@ -17,7 +17,8 @@ main() {
             return 1
         }
     else
-        install_official_packages vlc vlc-plugins-all ranger copyq mupdf bashtop rofi wofi
+        install_official_packages alacritty chawan korganizer obsidian qt5ct remmina terminator vlc vlc-plugins-all ranger copyq mupdf bashtop rofi wofi xclip
+        install_aur_packages pamac-aur
     fi
 
     log_success "Utilities installation complete!"

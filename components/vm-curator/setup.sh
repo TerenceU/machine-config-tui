@@ -17,7 +17,7 @@ main() {
             return 1
         }
     else
-        install_official_packages qemu-desktop qemu-hw-uefi-vars
+        install_official_packages qemu-desktop qemu-audio-pipewire qemu-hw-display-virtio-vga qemu-hw-display-virtio-vga-gl qemu-hw-uefi-vars qemu-ui-opengl qemu-ui-sdl
         install_aur_packages vm-curator
     fi
 

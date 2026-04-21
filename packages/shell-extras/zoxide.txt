@@ -1,0 +1,5 @@
+# Zoxide - smarter cd command
+# Format: [official] or [aur] section markers
+
+[official]
+zoxide

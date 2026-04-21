@@ -17,8 +17,8 @@ main() {
             return 1
         }
     else
-        install_official_packages git postgresql docker
-        install_aur_packages code pnpm
+        install_official_packages git postgresql docker docker-buildx docker-compose gum httpie stow
+        install_aur_packages code pnpm gvm
     fi
 
     log_info "Enabling Docker service..."

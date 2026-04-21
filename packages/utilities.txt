@@ -2,6 +2,13 @@
 # Format: [official] or [aur] section markers
 
 [official]
+alacritty
+chawan
+korganizer
+obsidian
+qt5ct
+remmina
+terminator
 vlc
 vlc-plugins-all
 ranger
@@ -10,3 +17,7 @@ mupdf
 bashtop
 rofi
 wofi
+xclip
+
+[aur]
+pamac-aur

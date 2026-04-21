@@ -3,7 +3,12 @@
 
 [official]
 qemu-desktop
+qemu-audio-pipewire
+qemu-hw-display-virtio-vga
+qemu-hw-display-virtio-vga-gl
 qemu-hw-uefi-vars
+qemu-ui-opengl
+qemu-ui-sdl
 
 [aur]
 vm-curator

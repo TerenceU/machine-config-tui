@@ -5,7 +5,13 @@
 git
 postgresql
 docker
+docker-buildx
+docker-compose
+gum
+httpie
+stow
 
 [aur]
 code
 pnpm
+gvm
