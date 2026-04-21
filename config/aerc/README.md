@@ -116,7 +116,7 @@ Required packages (install via `machine-config-tui` or manually):
 ```ini
 text/plain=colorize
 text/calendar=calendar
-text/html=! html           # dante rendering
+text/html=! cha -d -T text/html  # chawan rendering
 text/html=! w3m -T text/html -I UTF-8  # w3m fallback
 image/*=catimg -w $(tput cols) -       # image display
 ```
@@ -129,4 +129,3 @@ mail-received=notify-send "[$AERC_ACCOUNT/$AERC_FOLDER] New mail from $AERC_FROM
 
 ### Compose Settings
 - `reply-to-self=true` - Allow self-replies (useful for note-taking workflows)
-
