@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+PATCH_DIR="${HOME}/.local/share/qutebrowser-patch"
+
+if [[ -n "${PYTHONPATH:-}" ]]; then
+    export PYTHONPATH="${PATCH_DIR}:${PYTHONPATH}"
+else
+    export PYTHONPATH="${PATCH_DIR}"
+fi
+
+exec /usr/sbin/qutebrowser "$@"

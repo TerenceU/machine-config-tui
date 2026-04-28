@@ -1,6 +1,7 @@
 c.tabs.position="left"
 c.tabs.show="switching"
 c.statusbar.show="in-mode"
+c.statusbar.widgets = ['keypress', 'search_match', 'url', 'scroll', 'history', 'tabs', 'progress']
 
 
 # Preferisci il tema scuro se il sito lo supporta
